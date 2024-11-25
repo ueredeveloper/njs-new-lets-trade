@@ -80,3 +80,5 @@ ehthumbs.db
 
 # Nuxt.js output
 .nuxt/
+
+data/
