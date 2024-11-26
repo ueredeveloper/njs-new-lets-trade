@@ -5,7 +5,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
-const { fetchCandles } = require('./services');
+const { fetchCandles, fetchAllCurrencies } = require('./services');
 
 const app = express();
 app.use(cors());
@@ -15,6 +15,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 const router = express.Router();
 
 app.use('/services', fetchCandles);
+app.use('/services', fetchAllCurrencies);
 
 app.use(express.static(path.join(__dirname, 'public')));
 

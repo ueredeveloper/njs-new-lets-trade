@@ -1,8 +1,9 @@
-import searchCandlesticks  from "../services/search-candlesticks.js";
+import searchCandlesticks from "../services/search-candlesticks.js";
 
 const SearchCurrencyView = {
-    init: async function (symbol, interval) {
-        this.div = $('#search-currency-id');
+    init: async function (btnId, symbol, interval) {
+        this.div = $(`#${btnId}`);
+        this.btnSearchId = `btn-search-${btnId}`;
         this.symbol = symbol;
         this.interval = interval;
         this.render();
@@ -10,15 +11,16 @@ const SearchCurrencyView = {
     },
     render: function () {
         let innerHTML = `
-            <button id="btn-search">search</button>
+            <button id=${this.btnSearchId}>search</button>
         `;
 
         // Set the HTML content using jQuery
         this.div.html(innerHTML);
     },
     actions: function () {
+
         // Using an arrow function ensures that `this` refers to the SearchCurrencyView object
-        $('#btn-search').on('click', async () => {
+        $(`#${this.btnSearchId}`).on('click', async () => {
             try {
                 // Ensure you are calling the searchCandlesticks method with the correct parameters
                 const candles = await searchCandlesticks(this.symbol, this.interval);

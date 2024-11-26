@@ -1,4 +1,5 @@
 
 const fetchCandles = require('./fetchCandles');
+const fetchAllCurrencies = require('./fetchAllCurrencies');
 
-module.exports = {fetchCandles}
+module.exports = { fetchCandles, fetchAllCurrencies }

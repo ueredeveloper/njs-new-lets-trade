@@ -1,8 +1,8 @@
 import SearchCurrencyView from "../view/search-currency-view.js";
 
 const SearchCurrencyController = {
-    init: async function () {
-        SearchCurrencyView.init('BTCUSDT', '1h');
+    init: async function (btnId, symbol, interval) {
+        SearchCurrencyView.init(btnId, symbol, interval);
     }
 };
 
