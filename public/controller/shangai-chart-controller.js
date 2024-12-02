@@ -1,8 +1,8 @@
-import { ShangaiChartView } from "../view/chart/shangai-chart-view.js";
+import ShangaiChartView from "../view/chart/shangai-chart-view.js";
+
 
 const ShangaiChartController = {
     init: async function () {
-      
         ShangaiChartView.init();
     }
 };

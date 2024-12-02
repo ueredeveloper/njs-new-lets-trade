@@ -1,23 +1,7 @@
-//import * as echarts from 'echarts';
-
-import './styles.css';
-import convertOpenTime from '../../utils/convertOpenTime.js';
-
 const ShangaiChartView = {
-    
-
     init: function () {
-
-       // const chartDom = document.getElementById('chart');
-      //  const myChart = echarts.init(chartDom);
-
-        this.dom = document.getElementById('chart-container');
-        this.shangaiIndex2 = echarts.init(this.dom, null, {
-            renderer: 'canvas',
-            useDirtyRect: false
-        }),
-            this.app = {};
-        this.option;
+        this.dom = document.getElementById('shangai-chart-view');
+        this.shangaiIndex2 = echarts.init(this.dom);
 
         this.currency = {
             "symbol": "ETHUSDT",
@@ -4242,174 +4226,53 @@ const ShangaiChartView = {
                 2960.075599999997
             ]
         };
-        this.limit = 66;
 
-        $(document).on('selectCurrencyForChart', async function (event, currency) {
-
-            // Atualiza variável currency
-            ShangaiChartView.currency = currency[0];
-            // Atualiza chart
-            ShangaiChartView.render()
-        });
+        this.limit = 100; // Example data limit
 
         this.render();
-
     },
 
     render: function () {
-
         this.option = {
             title: {
                 text: `${this.currency.symbol} - ${this.currency.interval}`,
-                left: 0
-              },
+                left: 0,
+            },
             legend: {
                 data: ['Candles', 'MA200', 'CL', 'BL', 'spanA', 'spanB'],
-                inactiveColor: '#777'
+                inactiveColor: '#777',
             },
             tooltip: {
                 trigger: 'axis',
                 axisPointer: {
-                    animation: false,
                     type: 'cross',
-                    lineStyle: {
-                        color: '#376df4',
-                        width: 2,
-                        opacity: 1
-                    }
-                }
+                },
             },
             xAxis: {
                 type: 'category',
-                //data: this.currency.candlesticks.slice(-this.limit - 24).map(item => new Date(item.openTime).getHours()),
-                //data: this.currency.candlesticks.slice(-this.limit - 24).map(item => convertOpenTime(item.openTime, this.currency.interval )),
-                data: (() => {
-                    // Cria array com datas
-                    let initialArray = this.currency.candlesticks.map(item => convertOpenTime(item.openTime, this.currency.interval ))
-                    ;
-                    // Adiciona valores vazios à frente, lugar da spanA e spanB, adiantadas 25 períodos
-                    let valuesToPush = new Array(24).fill('');
-                    // Concatena as udas arrays
-                    return initialArray.concat(valuesToPush).slice(-this.limit - 24);
-                })(),
-                axisLine: {
-                    lineStyle: {
-                        color: '#8392A5'
-                    }
-                }
+                data: this.currency.candlesticks.map(item => new Date(item.openTime).toLocaleString()),
             },
             yAxis: {
                 scale: true,
-                axisLine: {
-                    lineStyle: {
-                        color: '#8392A5'
-                    }
-                },
-                splitLine: {
-                    show: false
-                }
             },
-            grid: {
-                bottom: 80
-            },
-            dataZoom: [{
-                textStyle: {
-                    color: '#8392A5'
-                },
-                handleIcon: 'path://M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
-                dataBackground: {
-                    areaStyle: {
-                        color: '#8392A5'
-                    },
-                    lineStyle: {
-                        opacity: 0.8,
-                        color: '#8392A5'
-                    }
-                },
-                brushSelect: true
-            },
-            {
-                type: 'inside'
-            }
-            ],
             series: [
                 {
                     name: 'Candles',
                     type: 'candlestick',
-                    data: this.currency.candlesticks.slice(-this.limit).map(item => [item.close, item.open, item.low, item.high]),
-                    itemStyle: {
-                       /* color: 'green',// '#FD1050',
-                        color0: 'green', //#0CF49B',
-                        borderColor: 'red', //'#FD1050',
-                        borderColor0: 'red',// '#0CF49B'*/
-                    }
+                    data: this.currency.candlesticks.map(item => [item.open, item.close, item.low, item.high]),
                 },
                 {
                     name: 'MA200',
                     type: 'line',
-                    data: this.currency.movingAverage.slice(-this.limit).map(item => item),
+                    data: this.currency.movingAverage,
                     smooth: true,
-                    showSymbol: false,
-                    lineStyle: {
-                        color: 'orange',
-                        width: 2
-                    }
+                    lineStyle: { color: 'orange', width: 2 },
                 },
-                {
-                    name: 'CL',
-                    type: 'line',
-                    data: this.currency.ichimokuCloud.slice(-this.limit).map(item => item.conversion),
-                    smooth: true,
-                    showSymbol: false,
-                    lineStyle: {
-                        color: 'blue',
-                        width: 1
-                    }
-                },
-                {
-                    name: 'BL',
-                    type: 'line',
-                    data: this.currency.ichimokuCloud.slice(-this.limit).map(item => item.base),
-                    smooth: true,
-                    showSymbol: false,
-                    lineStyle: {
-                        color: 'gray',
-                        width: 1
-                    }
-                },
-                {
-                    name: 'spanA',
-                    type: 'line',
-                    data: this.currency.ichimokuCloud.slice(-this.limit - 24).map(item => item.spanA),
-                    showSymbol: false,
-                    lineStyle: {
-                        color: 'green',
-                        width: 1
-                    }
-                },
-                {
-                    name: 'spanB',
-                    type: 'line',
-                    data: this.currency.ichimokuCloud.slice(-this.limit - 24).map(item => item.spanB),
-                    smooth: true,
-                    showSymbol: false,
-                    lineStyle: {
-                        color: 'red',
-                        width: 1
-                    }
-                }
-            ]
+            ],
         };
 
-        if (this.option && typeof this.option === 'object') {
-            this.shangaiIndex2.setOption(this.option);
-        }
+        this.shangaiIndex2.setOption(this.option);
+    },
+};
 
-        window.addEventListener('resize', this.shangaiIndex2.resize);
-
-    }
-
-
-}
-
-export { ShangaiChartView }
+export default ShangaiChartView;

@@ -4,20 +4,20 @@ import SearchCurrencyView from "./search-currency-view.js";
 
 const CurrencyView = {
   init: async function () {
-    this.div = $('#currencies-table'); // Select the element with jQuery
+    this.div = $('#currencies-view'); // Select the element with jQuery
     this.currencies = await CurrencyModel.getAllCurrencies();
     this.render();
   },
   render: async function () {
 
     this.div.append(`
-            <table class="">
+            <table class="h-96">
               <!-- congela a tag thead -->
               <thead class="sticky top-0 z-10" >
                 <tr class="bg-zinc-100">
-                  <th>Símbolo</th>
-                  <th>Preço</th>
-                  <th>Ação</th>
+                  <th class="w-4">Símbolo</th>
+                  <th class="text-center px-4 py-2 w-full">Preço</th>
+                  <th class="w-4">Ação</th>
                 </tr>
               </thead>
               <tbody></tbody>
@@ -40,9 +40,9 @@ const CurrencyView = {
 
       tbody.append(`
           <tr>
-            <td>${currency.symbol}</td>
-            <td>${currency.price}</td>
-            <td id=${btnId}></td>
+            <td class="text-center px-4 py-2">${currency.symbol}</td>
+            <td class="text-center px-4 py-2">${currency.price}</td>
+            <td class="text-center px-4 py-2" id=${btnId}></td>
             </tr>
             `)
 
