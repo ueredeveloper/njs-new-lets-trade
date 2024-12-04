@@ -1,7 +1,7 @@
 
-const fetchCandles = require('./fetchCandles');
+const fetchCandlesticksAndIndicators = require('./fetch-candlesticks-and-indicators');
 const fetchAllCurrencies = require('./fetchAllCurrencies');
 const fetchCalculateSMA = require('./fetchCalculateSMA');
 
 
-module.exports = { fetchCandles, fetchAllCurrencies, fetchCalculateSMA }
+module.exports = { fetchCandlesticksAndIndicators , fetchAllCurrencies, fetchCalculateSMA }

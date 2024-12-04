@@ -1,4 +1,4 @@
-import searchCandlesticks from "../services/search-candlesticks.js";
+import searchCandlesticks from "../services/fetch-candlesticks-and-indicators.js";
 
 const SearchCurrencyView = {
     init: async function (btnId, symbol, interval) {
