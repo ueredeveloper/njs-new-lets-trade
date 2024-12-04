@@ -9,9 +9,12 @@ Escreve os dados das velas em um arquivo JSON.
 */
 
 async function writeCandles(symbol, interval, candles) {
-
-  fs.writeFile(`./data/${symbol}-${interval}.json`, JSON.stringify(candles), (err) => {
-    if (err) throw err;
-  })
+  // Só escreve se houver candlesticks para escrever.
+  if (candles.length>0) {
+    fs.writeFile(`./data/${symbol}-${interval}.json`, JSON.stringify(candles), (err) => {
+      if (err) throw err;
+    })
+  }
+  
 }
 module.exports = writeCandles;

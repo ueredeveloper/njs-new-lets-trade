@@ -31,8 +31,8 @@ module.exports = router;
 retorno: 
 
 [
-    {"id":null,"symbol":"ETHBTC","price":"0.05522000","currency_collections":[[]]},
-    {"id":null,"symbol":"LTCBTC","price":"0.00131400","currency_collections":[[]]},
+    {"id":null,"symbol":"ETHBTC","price":"0.05522000"},
+    {"id":null,"symbol":"LTCBTC","price":"0.00131400"},
     ...
 ]
 

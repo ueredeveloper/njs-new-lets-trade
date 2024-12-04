@@ -24,9 +24,16 @@ const CurrencyView = {
             </table>
           `);
 
-    let tbody = this.div.find('tbody');
+    this.updateTable(this.currencies);
 
-    this.currencies.forEach((currency, index) => {
+  },
+  updateTable(currencies) {
+
+    let tbody = this.div.find('tbody');
+    tbody.empty();
+
+
+    currencies.forEach((currency, index) => {
       /* Exemplo de objeto
       [
         {
@@ -44,7 +51,7 @@ const CurrencyView = {
             <td class="text-center px-4 py-2">${currency.price}</td>
             <td class="text-center px-4 py-2" id=${btnId}></td>
             </tr>
-            `)
+            `);
 
 
       SearchCurrencyController.init(btnId, currency.symbol, '1h');
