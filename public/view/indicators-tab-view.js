@@ -50,18 +50,16 @@ const IndicatorsTabView = {
       try {
           const currencies = await CurrencyModel.getAllCurrencies();
   
-          console.log(currencies); // Verify the structure of `currencies`
-  
           // Use Promise.all to handle all async operations concurrently
           const allCandlesAndIndicators = await Promise.all(
-              currencies.map(async (currency) => {
+              currencies.slice(1, 2).map(async (currency) => {
                   return await fetchCandlesticksAndIndicators(currency.symbol, '1h');
               })
           );
   
-          CurrencyModel.setCandlesticksAndIndicators(currencies);
+          CurrencyModel.setCandlesticksAndIndicators(allCandlesAndIndicators);
 
-          CurrencyView.updateTable(currencies);
+          CurrencyView.updateTable(allCandlesAndIndicators);
   
       } catch (error) {
           console.error('Error fetching candlesticks:', error);

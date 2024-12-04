@@ -1,8 +1,6 @@
 function evaluateCandlePosition(lastMovingAverage, lastCandlestick) {
     let percentageDifference = ((lastCandlestick - lastMovingAverage) / lastMovingAverage) * 100;
 
-    console.log('percentage ', percentageDifference)
-
     /*
     Último valor da média móvel maior que o último valor do fechamento do candle ou porcentagem do 
     primeiro valor sobre o segundo menor que 0,5%. Assim pega-se também aqueles valores um 

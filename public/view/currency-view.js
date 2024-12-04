@@ -30,7 +30,7 @@ const CurrencyView = {
   updateTable(currencies) {
 
     let tbody = this.div.find('tbody');
-    tbody.empty();
+    //tbody.empty();
 
 
     currencies.forEach((currency, index) => {
