@@ -1,13 +1,15 @@
 import fetchAllCurrencies from '../services/fetch-all-currencies.js';
 
 const CurrencyModel = {
-    currencies: [],
+    currencies: null,
     getAllCurrencies: async function () {
-        /*if (!this.currencies) {
+        if (!this.currencies) {
             this.currencies = await fetchAllCurrencies();
-        }*/
+        }
+
+        return this.currencies;
  
-        return this.currencies = [
+       /* return this.currencies = [
             {
                 "id": null,
                 "symbol": "BTCUSDT",
@@ -1923,7 +1925,7 @@ const CurrencyModel = {
                 "symbol": "CETUSUSDT",
                 "price": "0.39660000"
             }
-        ]
+        ]*/
     },
     // Se precisar atualizar as moedas
     refreshCurrencies: async function () {

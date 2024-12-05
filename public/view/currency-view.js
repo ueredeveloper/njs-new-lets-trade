@@ -11,7 +11,7 @@ const CurrencyView = {
   render: async function () {
 
     this.div.append(`
-            <table class="h-96">
+            <table>
               <!-- congela a tag thead -->
               <thead class="sticky top-0 z-10" >
                 <tr class="bg-zinc-100">
@@ -30,7 +30,7 @@ const CurrencyView = {
   updateTable(currencies) {
 
     let tbody = this.div.find('tbody');
-    //tbody.empty();
+    tbody.empty();
 
 
     currencies.forEach((currency, index) => {
