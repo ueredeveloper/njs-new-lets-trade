@@ -1,25 +1,26 @@
 import CurrencyModel from "../model/currency-model.js";
-import fetchAllCurrencies from "../services/fetch-all-currencies.js";
 import fetchCandlesticksAndIndicators from "../services/fetch-candlesticks-and-indicators.js";
 import CurrencyView from "./currency-view.js";
 
 const IndicatorsTabView = {
+  filteredCurrencies: [],
   init: async function () {
     this.div = $('#indicators-tab-view'); // Select the element with jQuery
 
+
     this.render();
 
-    $(document).ready(function () {
+    $(document).ready(() => {
       // Action when a checkbox is checked or unchecked
-      $("input[type='checkbox']").on('change', async function () {
-        // Check the state of the checkbox
-        let isChecked = $(this).prop('checked');
+      $("input[type='checkbox']").on('change', async (event) => {
+        // Se foi clicado
+        let isChecked = $(event.target).prop('checked');
+        // Se é sma20, sma80 etc
+        let value = $(event.target).val();
 
-        if (isChecked && $(this).val() === 'sma20') {
+        if (isChecked && value === 'sma20') {
 
           let currencies = await CurrencyModel.getAllCurrencies();
-
-          console.log(currencies.length)
 
           if (currencies[0]?.indicators === undefined) {
             // Use Promise.all to handle all async operations concurrently
@@ -29,24 +30,22 @@ const IndicatorsTabView = {
               })
             );
           }
-
-          const filteredData = currencies.filter(item =>
+          // 05 dez 24 Continuar daqui, este filtro não está funcionando para filtra sma 20 acima ou abaixo do ma
+          this.filteredCurrencies = currencies.filter(item =>
             item.indicators.some(indicator =>
               indicator.type === "sma20" &&
               indicator.evaluateSma?.candleAboveSma === true
             )
           );
 
-          CurrencyModel.setCandlesticksAndIndicators(filteredData);
-
-          CurrencyView.updateTable(filteredData);
+          CurrencyView.updateTable(this.filteredCurrencies);
 
         }
-        console.log(`${$(this).val()} is ${isChecked ? 'checked' : 'unchecked'}`);
+
       });
 
       // Action when the button is clicked
-      $("#btn-sma-20").on('click', function () {
+      $("#btn-sma-20").on('click', async () => {
         // Get the checked checkboxes
         let checkedValues = [];
         $("input[type='checkbox']:checked").each(function () {
@@ -61,22 +60,30 @@ const IndicatorsTabView = {
       });
 
       // Event listener for radio button change
-      $('.filter-radio').on('change', function () {
-        const selectedDirection = $(this).attr('id');
-        console.log(selectedDirection.charAt(0).toUpperCase() + selectedDirection.slice(1) + ' filter selected');
+      $('.filter-radio').on('change', async (event) => {
 
+          let selectedDirection = $(event.target).attr('id');
+       // const selectedDirection = $(this).attr('id');
+        console.log(selectedDirection, this.filteredCurrencies)
+
+       
+
+        this.filteredCurrencies = this.filteredCurrencies.sort(items=> item.indicators)
+     //  console.log('radio ', this.filteredCurrencies)
+
+        //  CurrencyView.updateTable(this.filteredCurrencies);
 
 
 
 
       });
       // Se clicar no ícone (up, down), selecinar o radio correspondente
-      $('i').on('click', async function () {
+      $('i').on('click', async () => {
         const direction = $(this).hasClass('fa-sort-up') ? 'up' : 'down';
         // Check the corresponding radio button and trigger the change
         $('#' + direction).prop('checked', true).trigger('change');
 
-       
+        console.log('ícone', this.filteredCurrencies)
 
       });
 
