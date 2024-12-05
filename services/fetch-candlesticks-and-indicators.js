@@ -47,21 +47,36 @@ router.get("/candlesticks-and-indicators", async (req, res) => {
                         {
                             type: 'sma20',
                             period: 20,
+                            // Coloca o símbolo e intervalor dentro do indicador para filtrar no frontend melhor
+                            symbol: symbol,
+                            interval: interval,
                             values: sma20Values,
-                            evaluateSma: evaluateSma20
+                            candleAboveSma: evaluateSma20.candleAboveSma,
+                            percentageDifference: evaluateSma20.percentageDifference
+
                         },
                         {
                             type: 'sma80',
                             period: 80,
-                            values: sma80Values,
-                            evaluateSma: evaluateSma80
+                            // Coloca o símbolo e intervalor dentro do indicador para filtrar no frontend melhor
+                            symbol: symbol,
+                            interval: interval,
+                            values: sma20Values,
+                            candleAboveSma: evaluateSma80.candleAboveSma,
+                            percentageDifference: evaluateSma80.percentageDifference
+
                         },
                         {
                             type: 'sma200',
                             period: 200,
-                            values: sma200Values,
-                            evaluateSma: evaluateSma200
-                        }
+                            // Coloca o símbolo e intervalor dentro do indicador para filtrar no frontend melhor
+                            symbol: symbol,
+                            interval: interval,
+                            values: sma20Values,
+                            candleAboveSma: evaluateSma200.candleAboveSma,
+                            percentageDifference: evaluateSma200.percentageDifference
+
+                        },
                     ]
                 }
 

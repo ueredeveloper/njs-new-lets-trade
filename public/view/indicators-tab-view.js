@@ -1,12 +1,13 @@
 import CurrencyModel from "../model/currency-model.js";
 import fetchCandlesticksAndIndicators from "../services/fetch-candlesticks-and-indicators.js";
 import CurrencyView from "./currency-view.js";
+import IntervalView from "./interval-view.js";
 
 const IndicatorsTabView = {
   filteredCurrencies: [],
   init: async function () {
     this.div = $('#indicators-tab-view'); // Select the element with jQuery
-
+    this.period = 20;
 
     this.render();
 
@@ -15,10 +16,13 @@ const IndicatorsTabView = {
       $("input[type='checkbox']").on('change', async (event) => {
         // Se foi clicado
         let isChecked = $(event.target).prop('checked');
-        // Se é sma20, sma80 etc
-        let value = $(event.target).val();
 
-        if (isChecked && value === 'sma20') {
+        let interval = IntervalView.getSelectedInterval();
+
+        // Se é sma20, sma80 etc
+        IntervalView.period = $(event.target).val();
+
+        if (isChecked) {
 
           let currencies = await CurrencyModel.getAllCurrencies();
 
@@ -26,18 +30,18 @@ const IndicatorsTabView = {
             // Use Promise.all to handle all async operations concurrently
             currencies = await Promise.all(
               currencies.slice(1, 40).map(async (currency) => {
-                return await fetchCandlesticksAndIndicators(currency.symbol, '1h');
+                return await fetchCandlesticksAndIndicators(currency.symbol, interval);
               })
             );
           }
           // 05 dez 24 Continuar daqui, este filtro não está funcionando para filtra sma 20 acima ou abaixo do ma
           this.filteredCurrencies = currencies.filter(item =>
             item.indicators.some(indicator =>
-              indicator.type === "sma20" &&
-              indicator.evaluateSma?.candleAboveSma === true
+              indicator.period === IntervalView.period &&
+              indicator?.candleAboveSma === true
             )
           );
-
+          console.log('filter by sma 20 and candle above true', this.filteredCurrencies)
           CurrencyView.updateTable(this.filteredCurrencies);
 
         }
@@ -62,18 +66,41 @@ const IndicatorsTabView = {
       // Event listener for radio button change
       $('.filter-radio').on('change', async (event) => {
 
-          let selectedDirection = $(event.target).attr('id');
-       // const selectedDirection = $(this).attr('id');
-        console.log(selectedDirection, this.filteredCurrencies)
+        let selectedDirection = $(event.target).attr('id');
+        if (selectedDirection === 'up') {
 
-       
+          // Filtra indicadores, como sma20
+          let filteredIndicators = []
+          this.filteredCurrencies.forEach(currency => {
+            filteredIndicators.push(currency.indicators.find(indicator => indicator.period === IntervalView.period));
 
-        this.filteredCurrencies = this.filteredCurrencies.sort(items=> item.indicators)
-     //  console.log('radio ', this.filteredCurrencies)
+          })
+          // Ordena por porcentagem de proximidade entre o candle e a sma20, por exemplo
+          let sortIndicator = filteredIndicators.sort((a, b) => a.percentageDifference - b.percentageDifference);
 
-        //  CurrencyView.updateTable(this.filteredCurrencies);
+          // Reordena listra filtrada por indicador, como sma 20 e candleAboveSma igual a true
+          this.filteredCurrencies = sortIndicator.map(si => this.filteredCurrencies.find(currency => si.symbol === currency.symbol))
 
+          // Atualiza da tabela
+          CurrencyView.updateTable(this.filteredCurrencies);
 
+        } else {
+
+          console.log(this.filteredCurrencies)
+          let filteredIndicators = []
+          // Filtra por indicador, com sma20
+          this.filteredCurrencies.forEach(currency => {
+            filteredIndicators.push(currency.indicators.find(indicator => indicator.period === IntervalView.period));
+          })
+          // Ordena de forma inversa, do maior para o menor percentual de promixidade candle/sma20, por exemplo
+          let sortIndicator = filteredIndicators.sort((a, b) => b.percentageDifference - a.percentageDifference);
+
+          // Reordena listra filtrada por indicador, como sma 20 e candleAboveSma igual a true
+          this.filteredCurrencies = sortIndicator.map(si => this.filteredCurrencies.find(currency => si.symbol === currency.symbol))
+          // Atualiza da tabela
+          CurrencyView.updateTable(this.filteredCurrencies);
+
+        }
 
 
       });
@@ -118,13 +145,13 @@ const IndicatorsTabView = {
     <div class="p-4 m-2 border border-gray-300 rounded-lg">
       <div class="mb-4">
         <label for="in-sma-20" class="mr-3">SMA 20</label>
-        <input type="checkbox" id="in-sma-20" name="in-sma-20" value="sma20" class="mr-5">
+        <input type="checkbox" id="in-sma-20" name="in-sma-20" value="20" class="mr-5">
         
         <label for="in-sma-80" class="mr-3">SMA 80</label>
-        <input type="checkbox" id="in-sma-80" name="in-sma-80" value="sma80" class="mr-5">
+        <input type="checkbox" id="in-sma-80" name="in-sma-80" value="80" class="mr-5">
         
         <label for="in-sma-200" class="mr-3">SMA 200</label>
-        <input type="checkbox" id="in-sma-200" name="in-sma-200" value="sma200">
+        <input type="checkbox" id="in-sma-200" name="in-sma-200" value="200">
       </div>
 
       <div class="flex items-center">
