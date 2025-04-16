@@ -9,6 +9,7 @@ const router = require("express").Router();
 router.get("/candlesticks-and-indicators", async (req, res) => {
 
     let { symbol, interval, limit } = req.query;
+    console.log(symbol)
 
     try {
         let candlesticks = await getClandles(symbol, interval, limit);
